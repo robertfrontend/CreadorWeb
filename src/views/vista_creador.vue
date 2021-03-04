@@ -10,9 +10,13 @@
         </div>
       </b-col>
       <b-col cols="12">
-        <NavbarComplejo v-if="datosNavbar.tipo == 'nav-complejo'" />
-        <NavbarSimple v-if="datosNavbar.tipo == 'nav-simple'" />
-        <Main :tipo="datosMain.tipo" />
+
+        <NavbarComplejo v-if="datosNavbar == 'nav-complejo'" />
+        <NavbarSimple v-if="datosNavbar == 'nav-simple'" />
+
+
+        <Main :tipo="datosMain" />
+
         <Servicios :tipo="datosServicios.tipo" />
         <Productos :tipo="datosProductos.tipo" />
       </b-col>

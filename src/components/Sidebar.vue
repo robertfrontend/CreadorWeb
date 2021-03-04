@@ -11,10 +11,16 @@
       ><i class="fas" :class="open ? 'fa-arrow-left' : 'fa-arrow-right'"></i
     ></b-button>
 
-    <b-sidebar id="sidebar-1" shadow no-header
-        no-close-on-esc no-close-on-backdrop no-enforce-focus no-header-close
-        bg-variant="dark"
-        class="text-white"
+    <b-sidebar
+      id="sidebar-1"
+      shadow
+      no-header
+      no-close-on-esc
+      no-close-on-backdrop
+      no-enforce-focus
+      no-header-close
+      bg-variant="dark"
+      class="text-white"
     >
       <div class="px-3 py-2 mt-4">
         <h3 class="text-primary"><b>Creador Web</b></h3>
@@ -28,17 +34,17 @@
             <h4 class="text-left text-white">
               <b>Navbar</b>
             </h4>
-            <b-button
-              variant="outline-primary"
-              size="sm"
-              class="mx-1 my-2 text-white px-2"
-              v-for="(boton, index) in botonesNav"
-              :pressed.sync="boton.state"
-              :key="index"
-              @click="clickButton(boton)"
+            <el-select v-model="headerValue" clearable placeholder="Seleciona tipo de header" class="w-100" size="small"
+              @change="changeNavbar(headerValue)"
             >
-              {{ boton.texto }}
-            </b-button>
+              <el-option
+                v-for="item in optionsHeader"
+                :key="item.tipo"
+                :label="item.texto"
+                :value="item.tipo"
+              >
+              </el-option>
+            </el-select>
           </b-col>
 
           <!-- main -->
@@ -46,16 +52,18 @@
             <h4 class="text-left text-white">
               <b>Main</b>
             </h4>
-            <b-button
-              variant="outline-primary"
-              size="sm"
-              class="mx-1 my-2 text-white px-2"
-              v-for="(boton, index) in botonesMain"
-              :key="index"
-              @click="clickButton(boton)"
+
+            <el-select v-model="mainValue" clearable placeholder="Seleciona tipo de header" class="w-100" size="small"
+              @change="changeMain(mainValue)"
             >
-              {{ boton.texto }}
-            </b-button>
+              <el-option
+                v-for="item in optionsMain"
+                :key="item.tipo"
+                :label="item.texto"
+                :value="item.tipo"
+              >
+              </el-option>
+            </el-select>
           </b-col>
 
           <!-- servicios -->
@@ -109,59 +117,66 @@ export default {
   components: {},
   data() {
     return {
-      open: false,
 
-      botonesNav: [
+      headerValue: {tipo: 'nav-simple'},
+      optionsHeader: [
         { from: "nav", tipo: "nav-complejo", texto: "Navbar Complejo" },
         { from: "nav", tipo: "nav-simple", texto: "Navbar Simple" },
       ],
 
-      mostrar_main: false,
-      botonesMain: [
+      mostrar_main:false,
+      mainValue: {tipo: 'fondo_texto'},
+      optionsMain: [
         { from: "main", tipo: "foto-text", texto: "Foto y texto" },
         { from: "main", tipo: "fondo_texto", texto: "Fondo y Texto" },
-        // { from: "main", tipo: "Centro", texto: "Texto Centro" },
       ],
+
+      open: false,
 
       mostrar_service: false,
       botonesServicios: [
-          { from: "servicio", tipo: "tarjetas", texto: "Tarjetas" },
+        { from: "servicio", tipo: "tarjetas", texto: "Tarjetas" },
         { from: "servicio", tipo: "contenido", texto: "Contenido" },
       ],
 
       mostrar_productos: false,
       botonesProductos: [
-          { from: "producto", tipo: "productos1", texto: "Productos One" },
+        { from: "producto", tipo: "productos1", texto: "Productos One" },
         { from: "producto", tipo: "productos2", texto: "Productos Two" },
       ],
 
-      count: 3
+      count: 3,
     };
   },
   created() {
-        let 
-        nav = this.botonesNav[0],
-        main = this.botonesMain[0],
-        service = this.botonesServicios[0],
-        producto = this.botonesProductos[0]
-       this.$emit("emitirNavbar", nav);
-       this.$emit("emitirMain", main);
-       this.$emit("emitirServicio", service);
-       this.$emit("emitirProducto", producto);
+    let
+      service = this.botonesServicios[0],
+      producto = this.botonesProductos[0];
+    this.$emit("emitirServicio", service);
+    this.$emit("emitirProducto", producto);
 
-       this.siguiente()
+    this.siguiente();
+
+    
+    this.changeNavbar(this.headerValue.tipo)
+    this.changeMain(this.mainValue.tipo)
   },
   methods: {
+
+    changeNavbar(data) {
+        this.$emit("emitirNavbar", data);
+        console.log(data);
+    },
+
+    changeMain(data) {
+        this.$emit("emitirMain", data);
+        console.log(data);
+    },
+
     clickButton(data) {
       console.log({ data });
 
       switch (data.from) {
-        case "nav":
-          this.$emit("emitirNavbar", data);
-          break;
-        case "main":
-          this.$emit("emitirMain", data);
-          break;
         case "servicio":
           this.$emit("emitirServicio", data);
           break;
@@ -174,19 +189,22 @@ export default {
     },
 
     siguiente() {
-        this.count ++
-        this.count > 1 
-        ?
-            this.mostrar_main === false ? this.mostrar_main = true : '' 
-        : ''
-        this.count > 2
-        ?
-            this.mostrar_service === false ? this.mostrar_service = true : ''
-        : ''
-        this.count > 3
-        ?
-            this.mostrar_productos === false ? this.mostrar_productos = true : ''
-        : ''
+      this.count++;
+      this.count > 1
+        ? this.mostrar_main === false
+          ? (this.mostrar_main = true)
+          : ""
+        : "";
+      this.count > 2
+        ? this.mostrar_service === false
+          ? (this.mostrar_service = true)
+          : ""
+        : "";
+      this.count > 3
+        ? this.mostrar_productos === false
+          ? (this.mostrar_productos = true)
+          : ""
+        : "";
     },
   },
 };
