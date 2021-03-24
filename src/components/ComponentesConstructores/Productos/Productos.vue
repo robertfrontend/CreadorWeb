@@ -2,7 +2,7 @@
   <div class="my-5">
     <template v-if="tipo == 'productos1'">
       <b-container>
-        <div class="text-left mb-3">
+        <div class="text-center my-4 mb-3">
           <h3><b>Productos</b></h3>
         </div>
         <b-row align-h="center" align-v="center">

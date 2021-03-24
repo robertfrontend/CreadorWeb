@@ -30,74 +30,31 @@
 
         <b-row class="mt-3 pl-3">
           <!-- nav -->
-          <b-col cols="12" class="my-3 text-left">
+          <b-col
+            cols="12"
+            class="my-3 text-left"
+            v-for="(item, index) in componentes"
+            :key="index"
+          >
             <h4 class="text-left text-white">
-              <b>Navbar</b>
+              <b> {{ item.titulo }} </b>
             </h4>
-            <el-select v-model="headerValue" clearable placeholder="Seleciona tipo de header" class="w-100" size="small"
-              @change="changeNavbar(headerValue)"
+            <el-select
+              v-model="item.value"
+              clearable
+              placeholder="Seleciona tipo de header"
+              class="w-100"
+              size="small"
+              @change="changeSelect(item.value, item.titulo)"
             >
               <el-option
-                v-for="item in optionsHeader"
+                v-for="item in item.options"
                 :key="item.tipo"
                 :label="item.texto"
                 :value="item.tipo"
               >
               </el-option>
             </el-select>
-          </b-col>
-
-          <!-- main -->
-          <b-col cols="12" class="my-3 text-left" v-if="mostrar_main">
-            <h4 class="text-left text-white">
-              <b>Main</b>
-            </h4>
-
-            <el-select v-model="mainValue" clearable placeholder="Seleciona tipo de header" class="w-100" size="small"
-              @change="changeMain(mainValue)"
-            >
-              <el-option
-                v-for="item in optionsMain"
-                :key="item.tipo"
-                :label="item.texto"
-                :value="item.tipo"
-              >
-              </el-option>
-            </el-select>
-          </b-col>
-
-          <!-- servicios -->
-          <b-col cols="12" class="my-3 text-left" v-if="mostrar_service">
-            <h4 class="text-left text-white">
-              <b>Servicios</b>
-            </h4>
-            <b-button
-              variant="outline-primary"
-              size="sm"
-              class="mx-1 my-2 text-white px-2"
-              v-for="(boton, index) in botonesServicios"
-              :key="index"
-              @click="clickButton(boton)"
-            >
-              {{ boton.texto }}
-            </b-button>
-          </b-col>
-
-          <!-- productos -->
-          <b-col cols="12" class="my-3 text-left" v-if="mostrar_productos">
-            <h4 class="text-left text-white">
-              <b>Productos</b>
-            </h4>
-            <b-button
-              variant="outline-primary"
-              size="sm"
-              class="mx-1 my-2 text-white px-2"
-              v-for="(boton, index) in botonesProductos"
-              :key="index"
-              @click="clickButton(boton)"
-            >
-              {{ boton.texto }}
-            </b-button>
           </b-col>
         </b-row>
 
@@ -117,75 +74,71 @@ export default {
   components: {},
   data() {
     return {
-
-      headerValue: {tipo: 'nav-simple'},
-      optionsHeader: [
-        { from: "nav", tipo: "nav-complejo", texto: "Navbar Complejo" },
-        { from: "nav", tipo: "nav-simple", texto: "Navbar Simple" },
-      ],
-
-      mostrar_main:false,
-      mainValue: {tipo: 'fondo_texto'},
-      optionsMain: [
-        { from: "main", tipo: "foto-text", texto: "Foto y texto" },
-        { from: "main", tipo: "fondo_texto", texto: "Fondo y Texto" },
+      componentes: [
+        {
+          titulo: "Navbar",
+          value: { tipo: "nav-complejo" },
+          options: [
+            { from: "nav", tipo: "nav-complejo", texto: "Navbar Complejo" },
+            { from: "nav", tipo: "nav-simple", texto: "Navbar Simple" },
+          ],
+        },
+        {
+          titulo: "Main",
+          value: { tipo: "foto-text" },
+          options: [
+            { from: "main", tipo: "foto-text", texto: "Foto y texto" },
+            { from: "main", tipo: "fondo_texto", texto: "Fondo y Texto" },
+          ],
+        },
+        {
+          titulo: "Servicio",
+          value: { tipo: "tarjetas" },
+          options: [
+            { from: "servicio", tipo: "tarjetas", texto: "Tarjetas" },
+            { from: "servicio", tipo: "contenido", texto: "Contenido" },
+          ],
+        },
+        {
+          titulo: 'Producto',
+          value: { tipo: "productos2" },
+          options: [
+            { from: "producto", tipo: "productos1", texto: "Productos One" },
+            { from: "producto", tipo: "productos2", texto: "Productos Two" },
+          ],
+        },
       ],
 
       open: false,
-
-      mostrar_service: false,
-      botonesServicios: [
-        { from: "servicio", tipo: "tarjetas", texto: "Tarjetas" },
-        { from: "servicio", tipo: "contenido", texto: "Contenido" },
-      ],
-
-      mostrar_productos: false,
-      botonesProductos: [
-        { from: "producto", tipo: "productos1", texto: "Productos One" },
-        { from: "producto", tipo: "productos2", texto: "Productos Two" },
-      ],
 
       count: 3,
     };
   },
   created() {
-    let
-      service = this.botonesServicios[0],
-      producto = this.botonesProductos[0];
-    this.$emit("emitirServicio", service);
-    this.$emit("emitirProducto", producto);
-
     this.siguiente();
 
-    
-    this.changeNavbar(this.headerValue.tipo)
-    this.changeMain(this.mainValue.tipo)
+    this.changeSelect();
   },
   methods: {
-
-    changeNavbar(data) {
-        this.$emit("emitirNavbar", data);
-        console.log(data);
-    },
-
-    changeMain(data) {
-        this.$emit("emitirMain", data);
-        console.log(data);
-    },
-
-    clickButton(data) {
-      console.log({ data });
-
-      switch (data.from) {
-        case "servicio":
+    changeSelect(data, tipo) {
+      switch (tipo) {
+        case "Navbar":
+          this.$emit("emitirNavbar", data);
+          break;
+        case "Main":
+          this.$emit("emitirMain", data);
+          break;
+        case "Servicio":
           this.$emit("emitirServicio", data);
           break;
-        case "producto":
+        case "Producto":
           this.$emit("emitirProducto", data);
           break;
+
         default:
           break;
       }
+      console.log(data, tipo);
     },
 
     siguiente() {

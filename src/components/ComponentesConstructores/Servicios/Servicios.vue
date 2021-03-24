@@ -1,22 +1,7 @@
 <template>
   <div class="my-5">
-    <template v-if="loading">
-      <b-container class="mt-5">
-        <b-row>
-          <b-col cols="4">
-            <b-skeleton animation="wave" width="100%" height="15vh"></b-skeleton>
-          </b-col>
-          <b-col :cols="tipo == 'tarjetas' ? 4 : 8">
-            <b-skeleton animation="wave" width="100%" height="15vh"></b-skeleton>
-          </b-col>
-          <b-col cols="4" v-if="tipo == 'tarjetas'">
-            <b-skeleton animation="wave" width="100%" height="15vh"></b-skeleton>
-          </b-col>
-        </b-row>
-      </b-container>
-    </template>
 
-    <template v-if="tipo == 'tarjetas' && loading != true">
+    <template v-if="tipo == 'tarjetas'">
       <b-container>
         <b-row align-h="center" align-v="center">
           <b-col cols="12" class="text-center">
@@ -61,7 +46,7 @@
       </b-container>
     </template>
 
-    <template v-if="tipo == 'contenido' && loading != true">
+    <template v-if="tipo == 'contenido'">
       <b-container>
         <b-row align-v="center" align-h="center">
           <b-col md="4">

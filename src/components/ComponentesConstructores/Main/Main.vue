@@ -1,36 +1,24 @@
 <template>
   <div>
-    <template v-if="loading">
-      <b-container class="mt-5">
-        <b-row>
-          <b-col cols="6">
-            <b-skeleton animation="wave" width="100%" height="10vh"></b-skeleton>
-            <b-skeleton animation="wave" width="100%"></b-skeleton>
-            <b-skeleton animation="wave" width="10%" height="2vh"></b-skeleton>
-          </b-col>
-          <b-col cols="6">
-            <b-skeleton animation="wave" width="100%" height="15vh"></b-skeleton>
-          </b-col>
-        </b-row>
-      </b-container>
-    </template>
-
-    <template v-if="tipo == 'fondo_texto' && loading != true">
+    <template v-if="tipo == 'fondo_texto'">
       <div class="bg-dark text-white padre">
-        <div class="fondo" :style="'background:' + color_main">
+        <div class="fondo" :style="'background:' + backgroun_main.color">
           <b-container>
             <b-row align-h="start" align-v="start" class="my-4 py-4">
               <b-col cols="6" class="text-left py-4 py-4">
-                <h1 contenteditable="">
-                  Puedes cambiar este texto si deseas. Tambien el texto de abajo esta
-                  disponible.
+                <h1 contenteditable="" :style="'color:' + color_main.color">
+                  <b>
+                    Puedes cambiar este texto si deseas. Tambien el texto de abajo esta
+                    disponible.
+                  </b>
                 </h1>
                 <p>
                   Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro, fuga.
                 </p>
-                <b-button size="sm" variant="outline-light" class="px-4"
+                <b-button variant="outline-light" class="px-4 "
                   >Click me!</b-button
                 >
+  
               </b-col>
             </b-row>
           </b-container>
@@ -38,16 +26,16 @@
       </div>
     </template>
 
-    <template v-if="tipo == 'foto-text' && loading != true">
-      <div class="text-white padre-text py-4" :style="'background:' + color_main">
+    <template v-if="tipo == 'foto-text'">
+      <div class="text-white padre-text py-4" :style="'background:' + backgroun_main.color">
         <b-container>
           <b-row align-h="center" align-v="center" class="py-4">
             <b-col cols="6" class="text-left py-4 py-4">
-              <h1 contenteditable="">Puedes cambiar este texto si deseas.</h1>
+              <h1 contenteditable="" :style="'color:' + color_main.color"><b>Puedes cambiar este texto si deseas.</b></h1>
               <p>
                 Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dicta, minus?
               </p>
-              <b-button size="sm" variant="light" class="px-4">Click me!</b-button>
+              <b-button variant="light" class="px-4">Click me!</b-button>
             </b-col>
             <b-col cols="6">
               <img
@@ -58,21 +46,20 @@
               />
             </b-col>
           </b-row>
-
-          <!-- componente editar -->
-          <b-row align-v="center" align-h="center">
-            <b-col md="4">
-              <EditComponent
-                @eventoColor="eventoColor"
-                :componentes="{ 
-                fondo: true, 
-                colores: false,
-                 backgrounds: background }"
-              />
-            </b-col>
-          </b-row>
-
         </b-container>
+                  <!-- componente editar -->
+              <div class="componenteEditar">
+                <EditComponent
+                  @eventoColor="eventoColor"
+                  @eventoColorText="eventoColorText"
+                  :componentes="{ 
+                    fondo: true, 
+                    colores: true,
+                    backgrounds: background, 
+                    coloresText: coloresText, 
+                    }"
+                />
+              </div>
       </div>
     </template>
   </div>
@@ -89,8 +76,8 @@ export default {
     return {
       loading: false,
 
+      backgroun_main: "",
       color_main: "",
-
 
       background: [
         { color: "#2c3e50", id: "black" },
@@ -98,13 +85,20 @@ export default {
         { color: "#2ecc71", id: "green" },
         { color: "rgba(34, 0, 185, 0.719)", id: "navy" },
       ],
+
+      coloresText: [
+        { color: "#2c3e50", id: "black" },
+        { color: "#dfe6e9", id: "cly" },
+        { color: "#b2bec3", id: "gray" },
+        { color: "#00b894", id: "green" },
+      ],
     };
   },
 
   watch: {
     tipo() {
       if (this.tipo == "fondo_texto") {
-        this.color_main = "";
+        this.backgroun_main = "";
       }
       this.loading = true;
       setTimeout(() => {
@@ -114,10 +108,33 @@ export default {
   },
 
   methods: {
+
     eventoColor(color) {
-      this.color_main = color.color;
-      console.log({ color });
+      this.backgroun_main = color;
+      this.filtroColores()
     },
+
+    eventoColorText(color) {
+      this.color_main = color;
+      this.filtroColores()
+    },
+
+
+    filtroColores() {
+
+      if(this.backgroun_main.id ===  this.color_main.id) {
+        this.$confirm('El color de fondo y el color del texto son identicos, deseas continuar?', 'Advertencia', {
+          confirmButtonText: 'Si',
+          cancelButtonText: 'Cacelar',
+          type: 'warning'
+        }).then(() => {
+        }).catch(() => {
+          this.backgroun_main = this.background[0]
+          this.color_main = this.coloresText[1]
+        });
+      }
+    }
+
   },
 };
 </script>
@@ -144,5 +161,15 @@ export default {
   img {
     border-radius: 20px;
   }
+}
+.componenteEditar{
+  position: absolute;
+  top: 10em;
+  right: 4em;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+  padding: 0 1em;
 }
 </style>

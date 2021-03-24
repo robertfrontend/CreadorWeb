@@ -9,18 +9,27 @@
           >
         </div>
       </b-col>
-      <b-col cols="12">
-
-        <NavbarComplejo v-if="datosNavbar == 'nav-complejo'" />
-        <NavbarSimple v-if="datosNavbar == 'nav-simple'" />
-
-
-        <Main :tipo="datosMain" />
-
-        <Servicios :tipo="datosServicios.tipo" />
-        <Productos :tipo="datosProductos.tipo" />
-      </b-col>
     </b-row>
+
+    <div class="bienvenida" v-if="bienvenida" @click="empezar">
+      <div class="cursor">
+        <i class="fas fa-mouse-pointer mx-2"></i><i class="fas fa-palette mx-2"></i>
+      </div>
+      <h4>Bienvenidos a <span>Creador Web</span></h4>
+      <br />
+      <h5>Dame click para empezar a crear tu pagina web</h5>
+    </div>
+
+    <NavbarComplejo v-if="datosNavbar == 'nav-complejo'" />
+    <NavbarSimple v-if="datosNavbar == 'nav-simple'" />
+
+    <Main :tipo="datosMain" />
+
+    <Servicios :tipo="datosServicios" />
+
+    <Productos :tipo="datosProductos" />
+
+    <Footer />
 
     <Sidebar
       @emitirNavbar="emitirNavbar"
@@ -29,33 +38,17 @@
       @emitirProducto="emitirProducto"
     />
 
-    <div>
-      Navbar: <br />
-      {{ datosNavbar }}
-    </div>
-    <br />
-    <div>
-      Main: <br />
-      {{ datosMain }}
-    </div>
-    <br />
-    <div>
-      Servicios: <br />
-      {{ datosServicios }}
-    </div>
-    <br />
   </div>
 </template>
 
 <script>
-import Sidebar from "@/components/Sidebar.vue";
-
-import NavbarComplejo from "@/components/ComponentesConstructores/NavbarComplejo.vue";
-import NavbarSimple from "@/components/ComponentesConstructores/NavbarSimple.vue";
-
-import Main from "@/components/ComponentesConstructores/Main/Main.vue";
 import Servicios from "@/components/ComponentesConstructores/Servicios/Servicios.vue";
+import NavbarComplejo from "@/components/ComponentesConstructores/NavbarComplejo.vue";
 import Productos from "@/components/ComponentesConstructores/Productos/Productos.vue";
+import NavbarSimple from "@/components/ComponentesConstructores/NavbarSimple.vue";
+import Footer from "@/components/ComponentesConstructores/footer/Footer.vue";
+import Main from "@/components/ComponentesConstructores/Main/Main.vue";
+import Sidebar from "@/components/Sidebar.vue";
 
 export default {
   name: "vista_creador",
@@ -66,6 +59,8 @@ export default {
     Main,
     Servicios,
     Productos,
+
+    Footer,
   },
   data() {
     return {
@@ -73,6 +68,8 @@ export default {
       datosMain: "",
       datosServicios: "",
       datosProductos: "",
+
+      bienvenida: true,
     };
   },
   methods: {
@@ -95,6 +92,14 @@ export default {
       sidebar = document.querySelector(".sidebar");
       console.log(sidebar);
     },
+
+    empezar() {
+      this.emitirNavbar("nav-complejo");
+      this.emitirMain("foto-text");
+      this.emitirServicio("tarjetas");
+      this.emitirProducto("productos2");
+      this.bienvenida = false;
+    },
   },
 };
 </script>
@@ -102,5 +107,24 @@ export default {
 <style lang="scss" scoped>
 .layout {
   overflow-x: hidden !important;
+}
+.bienvenida {
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  bottom: auto;
+  background: rgb(224, 224, 224);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  span {
+    color: #6c63ff;
+  }
+
+  .cursor {
+    font-size: 5em;
+  }
 }
 </style>

@@ -10,7 +10,9 @@
       <template v-if="componentes.fondo">
         <b-row class="w-100 my-2" align-h="center" align-v="center">
           <b-col cols="12"
-            ><p class="m-0 pb-2"><slot name="tituloFondo">Cambiar fondo:</slot></p></b-col
+            ><p class="m-0 pb-2">
+              <b><slot name="tituloFondo">Cambiar fondo:</slot></b>
+            </p></b-col
           >
           <b-col
             cols="1"
@@ -23,20 +25,31 @@
               :class="selecionado === index ? 'selecionado' : ''"
               :style="'background:' + bg.color"
               :key="index"
-              @click="botonColor(bg, index)"
+              @click="botonBackground(bg, index, 'fondo')"
             ></div>
           </b-col>
         </b-row>
       </template>
 
       <template v-if="componentes.colores">
-        <b-row class="text-center w-100 my-2" align-h="center">
-          <b-col cols="12"><p class="m-0 pb-2">Cambiar color:</p></b-col>
-          <b-col cols="auto" v-for="(bg, index) in colors" :key="index">
+        <b-row class="w-100 my-2" align-h="center" align-v="center">
+          <b-col cols="12"
+            ><p class="m-0 pb-2">
+              <b><slot name="tituloColor">Cambiar Color:</slot></b>
+            </p></b-col
+          >
+          <b-col
+            cols="1"
+            class="mx-1"
+            v-for="(bg, index) in componentes.coloresText"
+            :key="index"
+          >
             <div
-              class="spanColor"
+              class="spanColor my-1"
+              :class="selecionadoTextColor === index ? 'selecionado' : ''"
               :style="'background:' + bg.color"
-              @click="botonColor(bg)"
+              :key="index"
+              @click="botonTextColor(bg, index, 'colorText')"
             ></div>
           </b-col>
         </b-row>
@@ -69,13 +82,20 @@ export default {
       ],
 
       openEdit: false,
+
       selecionado: null,
+      selecionadoTextColor: null,
     };
   },
   methods: {
-    botonColor(color, index) {
+    botonBackground(color, index) {
       this.$emit("eventoColor", color);
       this.selecionado = index;
+    },
+
+    botonTextColor(color, index) {
+      this.$emit("eventoColorText", color);
+      this.selecionadoTextColor = index;
     },
   },
 };
